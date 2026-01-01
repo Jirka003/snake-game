@@ -5,7 +5,7 @@ import os
 
 pygame.init()
 
-# ---------- RESOURCE PATH (FIXED) ----------
+# ---------- RESOURCE PATH ----------
 def resource_path(relative_path):
     try:
         base_path = sys._MEIPASS
@@ -29,9 +29,9 @@ ACCENT = (120, 150, 120)
 TEXT = (50, 50, 50)
 WHITE = (255, 255, 255)
 
-# ---------- FONT ----------
-font = pygame.font.Font(resource_path("assets/font.ttf"), 24)
-bigfont = pygame.font.Font(resource_path("assets/font.ttf"), 46)
+# ---------- FONT (BEZ SOUBORU) ----------
+font = pygame.font.SysFont(None, 24)
+bigfont = pygame.font.SysFont(None, 46)
 
 # ---------- RYCHLOST ----------
 BASE_FPS = 4
@@ -58,11 +58,10 @@ def draw_button(text, x, y, w, h):
     pygame.draw.rect(win, color, (x, y, w, h), border_radius=18)
 
     label = font.render(text, True, WHITE)
-    win.blit(
-        label,
-        (x + w // 2 - label.get_width() // 2,
-         y + h // 2 - label.get_height() // 2)
-    )
+    win.blit(label, (
+        x + w // 2 - label.get_width() // 2,
+        y + h // 2 - label.get_height() // 2
+    ))
 
     return hover
 
@@ -210,3 +209,4 @@ def end_screen(score):
                 game()
 
 game()
+
