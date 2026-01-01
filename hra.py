@@ -5,20 +5,19 @@ import os
 
 pygame.init()
 
-# ---------- RESOURCE PATH ----------
-def resource_path(path):
+# ---------- RESOURCE PATH (FIXED) ----------
+def resource_path(relative_path):
     try:
-        base = sys._MEIPASS
-    except:
-        base = os.path.abspath(".")
-    return os.path.join(base, path)
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(base_path, relative_path)
 
 # ---------- OKNO ----------
 WIDTH, HEIGHT = 960, 640
 BLOCK = 64
 
 win = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Pro Kačenku k Vánocům")
 pygame.display.set_caption("Nejíst psa!")
 clock = pygame.time.Clock()
 
@@ -106,12 +105,12 @@ def menu():
         win.fill(BG)
 
         title = bigfont.render("Pro Kačenku k Vánocům", True, TEXT)
-        subtitle = font.render("Ovládání: WSAD (Nesněz si psa)", True, TEXT)
-        
-        
+        subtitle = font.render("Ovládání: WSAD", True, TEXT)
+        subtitle2 = font.render("Pozor – nejez psa 🐶", True, TEXT)
 
         win.blit(title, (WIDTH // 2 - title.get_width() // 2, 120))
         win.blit(subtitle, (WIDTH // 2 - subtitle.get_width() // 2, 180))
+        win.blit(subtitle2, (WIDTH // 2 - subtitle2.get_width() // 2, 215))
 
         start_btn = draw_button("HRÁT", WIDTH // 2 - 100, 320, 200, 55)
 
@@ -135,8 +134,7 @@ def game():
 
     food = Food(snake)
 
-    running = True
-    while running:
+    while True:
         clock.tick(fps)
 
         for event in pygame.event.get():
@@ -155,7 +153,6 @@ def game():
 
         head = (snake[0][0] + dx, snake[0][1] + dy)
 
-        # ❌ KOLIZE
         if head[0] < 0 or head[0] >= WIDTH or head[1] < BLOCK or head[1] >= HEIGHT:
             break
         if head in snake:
@@ -170,13 +167,12 @@ def game():
         else:
             snake.pop()
 
-        # ---------- KRESLENÍ ----------
         win.fill(PLAY_BG)
         pygame.draw.rect(win, PANEL, (0, 0, WIDTH, BLOCK))
         pygame.draw.line(win, ACCENT, (0, BLOCK), (WIDTH, BLOCK), 3)
 
         win.blit(font.render(f"Body: {score}", True, TEXT), (20, 18))
-        win.blit(font.render(f"Rychlost: {fps}", True, TEXT), (820, 18))
+        win.blit(font.render(f"Rychlost: {fps}", True, TEXT), (800, 18))
 
         for i, part in enumerate(snake):
             if i == 0:
